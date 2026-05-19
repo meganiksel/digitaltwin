@@ -1,0 +1,8 @@
+{
+  "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+  "dimension": 384,
+  "total_vectors": 67,
+  "total_chunks": 67,
+  "chunk_size": 500,
+  "chunk_overlap": 50
+}

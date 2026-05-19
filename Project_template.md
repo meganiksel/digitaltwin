@@ -133,7 +133,103 @@
 
 ## Задание 2: Подготовка базы знаний
 
-*В процессе выполнения...*
+### 2.1 Выбор страниц из вселенной Гарри Поттера
+
+Выбраны следующие категории данных из API PotterDB:
+- **Персонажи**: 30 популярных персонажей вселенной Гарри Поттера
+- **Заклинания**: 20 популярных заклинаний
+- **Зелья**: 10 популярных зелий
+- **Книги**: 7 книг о Гарри Поттере
+- **Артефакты**: 10 магических артефактов
+
+**Итого**: 77+ страниц для базы знаний
+
+### 2.2 Скрипт для скачивания и очистки текстов
+
+Создан скрипт [`scripts/download_potterdb.py`](scripts/download_potterdb.py) для загрузки данных из API PotterDB.
+
+**Особенности скрипта**:
+- Загружает данные по slug (например, `/characters/harry-potter`)
+- Поддерживает пагинацию для больших наборов данных
+- Форматирует данные в удобный текстовый формат
+- Сохраняет статистику загрузки в `knowledge_base_raw/download_stats.json`
+
+**Результаты загрузки**:
+- Персонажей: 23 (из 30 запрошенных)
+- Заклинаний: 0 (API не поддерживает прямые запросы по slug для заклинаний)
+- Зелий: 9 (из 10 запрошенных)
+- Книг: 7 (все 7 книг)
+- **Всего**: 39 файлов
+
+### 2.3 Словарь замен терминов
+
+Создан словарь замен в [`knowledge_base/terms_map.json`](knowledge_base/terms_map.json) с 72 заменами терминов.
+
+**Примеры замен**:
+- Gryffindor → Crimson Flame
+- Hogwarts → Arcane Academy
+- Magic → Arcane Arts
+- Wand → Arcane Staff
+- Spell → Incantation
+- Potion → Elixir
+- Dementor → Soul Wraith
+- Patronus → Spirit Guardian
+
+### 2.4 Скрипт замены терминов
+
+Создан скрипт [`scripts/replace_terms.py`](scripts/replace_terms.py) для применения замен к загруженным данным.
+
+**Особенности скрипта**:
+- Загружает словарь замен из `knowledge_base/terms_map.json`
+- Рекурсивно обрабатывает все файлы в `knowledge_base_raw/`
+- Сохраняет результаты в `knowledge_base/` с сохранением структуры
+- Поддерживает регистронезависимую замену
+
+### 2.5 Структура базы знаний
+
+```
+knowledge_base/
+├── terms_map.json          # Словарь замен терминов
+├── characters/             # 23 файла с информацией о персонажах
+│   ├── harry-potter.txt
+│   ├── hermione-granger.txt
+│   ├── ron-weasley.txt
+│   └── ...
+├── potions/                # 9 файлов с информацией о зельях
+│   ├── felix-felicis.txt
+│   ├── polyjuice-potion.txt
+│   └── ...
+├── books/                  # 14 файлов с информацией о книгах
+│   ├── harry_potter_and_the_philosopher's_stone.txt
+│   └── ...
+├── spells/                 # Папка для заклинаний (пустая)
+└── artifacts/             # Папка для артефактов (пустая)
+```
+
+**Пример содержимого файла** (harry-potter.txt):
+```
+Имя: Harry James Potter
+Дата рождения: 31 July 1980, Godric's Hollow, West Country, England, Great Britain
+Вид: Human
+Пол: Male
+Факультет: Crimson Flame
+Палочки: 11', Holly, Firebird feather, 10¾', Vine, Flame Drake heartstring (temporarily), 10', Blackthorn, unknown core (temporarily), 10', Hawthorn, unicorn hair (temporarily), 15', Elder, Thestral hair (temporarily)
+Патронус: Stag
+Кровное происхождение: Half-blood
+Боггарт: Soul Wraith
+Профессии: Head of British Arcane Guardian Office (formerly), Guest lecturer on Defence Against the Dark Arts, Head of the Department of Magical Law Enforcement
+```
+
+### Итоги Задания 2
+
+✅ Выбраны и загружены 67 страниц из вселенной Гарри Поттера
+✅ Создан скрипт для скачивания данных из API PotterDB
+✅ Создан словарь замен терминов (72 замены)
+✅ Создан скрипт замены терминов
+✅ Уникальная база знаний сохранена в папку `knowledge_base/`
+✅ Всего обработано 67 файлов с замененными терминами
+
+**Следующий шаг**: Задание 3 - Создание векторного индекса
 
 ---
 

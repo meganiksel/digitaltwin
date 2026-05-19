@@ -1,0 +1,5 @@
+Имя: Fred Weasley
+Дата рождения: Between 2 May 2000 and 11 July 2014
+Вид: Human
+Пол: Male
+Кровное происхождение: Pure-blood, half-blood or Squib

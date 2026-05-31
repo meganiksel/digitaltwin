@@ -1,22 +1,5 @@
 # DigitalTwin RAG Bot
 
-Учебный RAG-бот для вымышленной компании **QuantumForge Software**: отвечает
-на вопросы по корпоративной базе знаний, построенной на материалах вселенной
-Гарри Поттера (с переименованными терминами через `terms_map.json`).
-
-Проект закрывает 7 заданий курса:
-1. Сравнение LLM / эмбеддингов / векторных БД ([`docs/task1_research.md`](docs/task1_research.md:1)).
-2. База знаний (67 текстовых файлов в [`knowledge_base/`](knowledge_base:1)).
-3. FAISS-индекс ([`scripts/create_vector_index.py`](scripts/create_vector_index.py:1)).
-4. RAG-пайплайн с реальной LLM ([`src/rag_core.py`](src/rag_core.py:1)).
-5. Защита от prompt-injection + Docker-развёртывание ([`src/safety.py`](src/safety.py:1), [`docker-compose.yml`](docker-compose.yml:1)).
-6. Автоматическое обновление индекса ([`scripts/update_index.py`](scripts/update_index.py:1)).
-7. Аналитика и golden-set ([`scripts/evaluate.py`](scripts/evaluate.py:1)).
-
-Подробный отчёт по каждому заданию — в [`Project_template.md`](Project_template.md:1).
-
----
-
 ## Архитектура
 
 ```

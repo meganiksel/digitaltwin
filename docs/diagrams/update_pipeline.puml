@@ -1,0 +1,37 @@
+@startuml update_pipeline
+title Архитектура автоматического обновления базы знаний (Задание 6)
+
+skinparam shadowing false
+skinparam rectangle {
+    BackgroundColor #FAFAFA
+    BorderColor #888888
+}
+
+actor "Cron / Docker compose\n(profile: updater)" as Scheduler
+
+rectangle "Источник данных\n(knowledge_base/)" as Source
+rectangle "scripts/update_index.py" as Updater {
+    rectangle "1. scan_kb()\nSHA-1 каждого файла" as Scan
+    rectangle "2. diff vs files_state.json" as Diff
+    rectangle "3. RecursiveTextSplitter\n→ chunks" as Chunker
+    rectangle "4. SentenceTransformer\n→ embeddings" as Embedder
+}
+
+database "vector_index/\n- faiss_index.bin\n- chunks.pkl\n- files_state.json" as Index
+database "logs/update.log\n(JSONL)" as Log
+
+Scheduler --> Updater : ежедневно 06:00
+Source --> Scan
+Scan --> Diff
+Diff --> Chunker : added / changed
+Chunker --> Embedder
+Embedder --> Index : write faiss_index + chunks
+Updater --> Log : status, counts, errors
+
+note right of Index
+  При следующем запросе RAG-бот
+  читает обновлённый индекс
+  через `RAGCore._load_resources()`
+end note
+
+@enduml

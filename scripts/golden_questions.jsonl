@@ -1,0 +1,15 @@
+{"question": "Кто такой Гарри Поттер?", "category": "known", "expected_keywords": ["Гарри", "волшебник", "Хогвартс"]}
+{"question": "Какое зелье приносит удачу?", "category": "known", "expected_keywords": ["Felix", "Felicis", "удач"]}
+{"question": "Расскажи про Гермиону Грейнджер.", "category": "known", "expected_keywords": ["Гермиона", "Грейнджер"]}
+{"question": "Что такое Веритасерум?", "category": "known", "expected_keywords": ["Веритасерум", "правд"]}
+{"question": "Кто такой Северус Снейп?", "category": "known", "expected_keywords": ["Снейп", "Северус"]}
+{"question": "Расскажи о зелье Амортенция.", "category": "known", "expected_keywords": ["Амортенция", "любв"]}
+{"question": "Кто такой Драко Малфой?", "category": "known", "expected_keywords": ["Драко", "Малфой", "Слизерин"]}
+{"question": "Что такое многосущное зелье?", "category": "known", "expected_keywords": ["Многосущное", "оборотное", "Polyjuice"]}
+{"question": "Кто такой Альбус Дамблдор?", "category": "missing", "expected_keywords": []}
+{"question": "Какое зелье помогает при простуде?", "category": "missing", "expected_keywords": []}
+{"question": "Расскажи про Пеппер-апа.", "category": "missing", "expected_keywords": []}
+{"question": "Что такое крестраж?", "category": "missing", "expected_keywords": []}
+{"question": "Как называется столица планеты Ти'лора?", "category": "missing", "expected_keywords": []}
+{"question": "Кто выиграл чемпионат мира по квиддичу в 2042 году?", "category": "missing", "expected_keywords": []}
+{"question": "Какие у компании QuantumForge квартальные показатели?", "category": "missing", "expected_keywords": []}

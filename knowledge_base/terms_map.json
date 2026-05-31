@@ -1,0 +1,90 @@
+{
+  "Персонажи": {
+    "Harry Potter": "Xander Thornfield",
+    "Hermione Granger": "Lyra Blackwood",
+    "Ron Weasley": "Rowan Redford",
+    "Albus Dumbledore": "Archibald Dawnbringer",
+    "Severus Snape": "Silas Nightshade",
+    "Lord Voldemort": "Lord Vexmort",
+    "Draco Malfoy": "Dorian Shadowmere",
+    "Sirius Black": "Sterling Nightwind",
+    "Rubeus Hagrid": "Rorik Stoneheart",
+    "Minerva McGonagall": "Miranda Stormwind"
+  },
+  "Места": {
+    "Hogwarts": "Arcanum Academy",
+    "Diagon Alley": "Mystic Market",
+    "Ministry of Magic": "Council of Aether",
+    "Gringotts": "Gilded Vault",
+    "Hogsmeade": "Whispering Village",
+    "Privet Drive": "Maple Lane",
+    "Azkaban": "Shadow Citadel",
+    "Platform 9¾": "Gateway 7⅜",
+    "Gryffindor Tower": "Crimson Spire",
+    "Slytherin Dungeon": "Emerald Depths"
+  },
+  "Заклинания": {
+    "Expelliarmus": "Dispel Force",
+    "Avada Kedavra": "Void Strike",
+    "Expecto Patronum": "Summon Guardian",
+    "Lumos": "Illumine",
+    "Wingardium Leviosa": "Levitate",
+    "Alohomora": "Unlock",
+    "Petrificus Totalus": "Bind",
+    "Stupefy": "Stun",
+    "Protego": "Shield",
+    "Accio": "Summon"
+  },
+  "Артефакты": {
+    "Elder Wand": "Ancient Staff",
+    "Invisibility Cloak": "Shadow Mantle",
+    "Resurrection Stone": "Soul Gem",
+    "Sorting Hat": "Destiny Helm",
+    "Marauder's Map": "Pathfinder Scroll",
+    "Time-Turner": "Chronos Amulet",
+    "Golden Snitch": "Gilded Orb",
+    "Philosopher's Stone": "Alchemist's Crystal",
+    "Mirror of Erised": "Mirror of Desires",
+    "Deluminator": "Light Catcher"
+  },
+  "Расы и существа": {
+    "Wizard": "Adept",
+    "Witch": "Sorceress",
+    "Muggle": "Ordinary",
+    "House-elf": "Spirit Servant",
+    "Dementor": "Soul Wraith",
+    "Phoenix": "Firebird",
+    "Centaur": "Forest Walker",
+    "Goblin": "Vault Keeper",
+    "Dragon": "Flame Drake",
+    "Basilisk": "Serpent King"
+  },
+  "Понятия": {
+    "Magic": "Aether",
+    "Wand": "Focus Staff",
+    "Spell": "Incantation",
+    "Potion": "Elixir",
+    "Quidditch": "Aether Ball",
+    "Horcrux": "Soul Fragment",
+    "Death Eater": "Shadow Knight",
+    "Order of the Phoenix": "Circle of Firebirds",
+    "Auror": "Arcane Guardian",
+    "Animagus": "Shape Shifter"
+  },
+  "Факультеты": {
+    "Gryffindor": "Crimson Flame",
+    "Slytherin": "Emerald Scale",
+    "Ravenclaw": "Azure Wing",
+    "Hufflepuff": "Golden Root"
+  },
+  "Предметы": {
+    "Potions": "Elixir Crafting",
+    "Defense Against the Dark Arts": "Shadow Defense",
+    "Charms": "Enchantments",
+    "Transfiguration": "Matter Shaping",
+    "Divination": "Foresight",
+    "Herbology": "Flora Studies",
+    "Care of Magical Creatures": "Beast Taming",
+    "Astronomy": "Star Lore"
+  }
+}

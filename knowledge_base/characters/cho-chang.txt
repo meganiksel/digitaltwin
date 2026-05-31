@@ -1,0 +1,13 @@
+Имя: Cho Chang
+Дата рождения: Between 1 September 1978 and 31 August 1979
+Вид: Human
+Пол: Female
+Факультет: Azure Wing
+Палочки: Unknown length, wood and core
+Патронус: Swan
+Кровное происхождение: Pure-blood or half-blood
+Семейное положение: Married
+Национальность: British or Irish
+Цвет волос: Black
+Боггарт: Lord Vexmort
+Семья: Father, Mother, Spouse, Grandfather

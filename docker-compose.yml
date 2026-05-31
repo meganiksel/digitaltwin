@@ -19,6 +19,8 @@ services:
       LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
       OLLAMA_HOST: http://ollama:11434
       OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:3b-instruct}
+      OLLAMA_TIMEOUT: ${OLLAMA_TIMEOUT:-600}
+      OLLAMA_NUM_PREDICT: ${OLLAMA_NUM_PREDICT:-512}
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
       SAFETY_ENABLED: ${SAFETY_ENABLED:-true}
       QUERY_LOG_PATH: /app/logs/queries.jsonl
@@ -41,6 +43,8 @@ services:
       LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
       OLLAMA_HOST: http://ollama:11434
       OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:3b-instruct}
+      OLLAMA_TIMEOUT: ${OLLAMA_TIMEOUT:-600}
+      OLLAMA_NUM_PREDICT: ${OLLAMA_NUM_PREDICT:-512}
       EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
       TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
       SAFETY_ENABLED: ${SAFETY_ENABLED:-true}

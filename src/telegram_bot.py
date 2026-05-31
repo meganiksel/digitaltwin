@@ -132,6 +132,15 @@ async def main():
         return
 
     await bot.delete_webhook(drop_pending_updates=True)
+
+    # Прогреваем LLM: загружаем модель в RAM Ollama, чтобы первый
+    # пользовательский запрос не упёрся в таймаут.
+    warmup = getattr(rag.llm, "warmup", None)
+    if callable(warmup):
+        logger.info("Прогрев LLM (%s)...", rag.llm.name)
+        await asyncio.to_thread(warmup)
+        logger.info("Прогрев LLM завершён")
+
     logger.info("Бот запущен...")
     await dp.start_polling(bot)
 

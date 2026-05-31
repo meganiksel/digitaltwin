@@ -46,13 +46,18 @@ class OllamaProvider(BaseLLMProvider):
         self,
         host: Optional[str] = None,
         model: Optional[str] = None,
-        timeout: int = 120,
+        timeout: Optional[int] = None,
         temperature: float = 0.2,
+        num_predict: Optional[int] = None,
     ):
         self.host = (host or os.getenv("OLLAMA_HOST", "http://localhost:11434")).rstrip("/")
         self.model = model or os.getenv("OLLAMA_MODEL", "qwen2.5:3b-instruct")
-        self.timeout = timeout
+
+        self.timeout = timeout if timeout is not None else int(os.getenv("OLLAMA_TIMEOUT", "600"))
         self.temperature = temperature
+        self.num_predict = num_predict if num_predict is not None else int(
+            os.getenv("OLLAMA_NUM_PREDICT", "512")
+        )
 
     def healthcheck(self) -> bool:
         try:
@@ -61,12 +66,29 @@ class OllamaProvider(BaseLLMProvider):
         except requests.RequestException:
             return False
 
+    def warmup(self) -> None:
+        """Прогрев: заставляем Ollama подгрузить модель в RAM до первого
+        пользовательского запроса. Игнорируем ошибки — это best-effort."""
+        try:
+            requests.post(
+                f"{self.host}/api/generate",
+                json={"model": self.model, "prompt": "", "stream": False,
+                      "keep_alive": "30m"},
+                timeout=self.timeout,
+            )
+        except requests.RequestException:
+            pass
+
     def generate(self, prompt: str, system: Optional[str] = None) -> str:
         payload = {
             "model": self.model,
             "prompt": prompt,
             "stream": False,
-            "options": {"temperature": self.temperature},
+            "keep_alive": "30m",
+            "options": {
+                "temperature": self.temperature,
+                "num_predict": self.num_predict,
+            },
         }
         if system:
             payload["system"] = system

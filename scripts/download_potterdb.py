@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""
-Скрипт для скачивания данных из API PotterDB по slug
-https://docs.potterdb.com/
-"""
+"""Скачивание данных из PotterDB API (https://docs.potterdb.com/) — сырьё для Задания 2."""
 
 import requests
 import json
@@ -10,10 +7,8 @@ import time
 from pathlib import Path
 from typing import Dict, Any
 
-# Конфигурация API
 BASE_URL = "https://api.potterdb.com/v1"
 
-# Популярные персонажи с их slug
 POPULAR_CHARACTERS = [
     "harry-potter",
     "hermione-granger",
@@ -47,7 +42,6 @@ POPULAR_CHARACTERS = [
     "narcissa-malfoy"
 ]
 
-# Популярные заклинания с их slug
 POPULAR_SPELLS = [
     "expelliarmus",
     "expecto-patronum",
@@ -71,7 +65,6 @@ POPULAR_SPELLS = [
     "aguamenti"
 ]
 
-# Популярные зелья с их slug
 POPULAR_POTIONS = [
     "felix-felicis",
     "polyjuice-potion",
@@ -87,9 +80,6 @@ POPULAR_POTIONS = [
 
 
 def fetch_character_by_slug(slug: str) -> Dict[str, Any]:
-    """
-    Загружает информацию о персонаже по slug
-    """
     try:
         url = f"{BASE_URL}/characters/{slug}"
         response = requests.get(url, timeout=30)
@@ -104,9 +94,6 @@ def fetch_character_by_slug(slug: str) -> Dict[str, Any]:
 
 
 def fetch_spell_by_slug(slug: str) -> Dict[str, Any]:
-    """
-    Загружает информацию о заклинании по slug
-    """
     try:
         url = f"{BASE_URL}/spells/{slug}"
         response = requests.get(url, timeout=30)
@@ -121,9 +108,6 @@ def fetch_spell_by_slug(slug: str) -> Dict[str, Any]:
 
 
 def fetch_potion_by_slug(slug: str) -> Dict[str, Any]:
-    """
-    Загружает информацию о зелье по slug
-    """
     try:
         url = f"{BASE_URL}/potions/{slug}"
         response = requests.get(url, timeout=30)
@@ -138,9 +122,6 @@ def fetch_potion_by_slug(slug: str) -> Dict[str, Any]:
 
 
 def fetch_all_books() -> list:
-    """
-    Загружает все книги
-    """
     try:
         url = f"{BASE_URL}/books"
         response = requests.get(url, timeout=30)
@@ -229,9 +210,6 @@ def format_character_text(character: Dict[str, Any]) -> str:
 
 
 def format_spell_text(spell: Dict[str, Any]) -> str:
-    """
-    Форматирует данные о заклинании в текстовый формат
-    """
     attrs = spell.get("attributes", {})
     
     text_parts = []
@@ -259,9 +237,6 @@ def format_spell_text(spell: Dict[str, Any]) -> str:
 
 
 def format_potion_text(potion: Dict[str, Any]) -> str:
-    """
-    Форматирует данные о зелье в текстовый формат
-    """
     attrs = potion.get("attributes", {})
     
     text_parts = []
@@ -296,9 +271,6 @@ def format_potion_text(potion: Dict[str, Any]) -> str:
 
 
 def format_book_text(book: Dict[str, Any]) -> str:
-    """
-    Форматирует данные о книге в текстовый формат
-    """
     attrs = book.get("attributes", {})
     
     text_parts = []
@@ -323,14 +295,9 @@ def format_book_text(book: Dict[str, Any]) -> str:
 
 
 def save_character(character: Dict[str, Any], output_dir: Path):
-    """
-    Сохраняет информацию о персонаже в файл
-    """
     attrs = character.get("attributes", {})
     name = attrs.get("name", "unknown")
     slug = attrs.get("slug", "unknown")
-    
-    # Создаем безопасное имя файла
     safe_name = slug.lower().replace(" ", "_").replace("/", "_").replace("\\", "_")
     filename = f"{safe_name}.txt"
     filepath = output_dir / filename
@@ -344,14 +311,9 @@ def save_character(character: Dict[str, Any], output_dir: Path):
 
 
 def save_spell(spell: Dict[str, Any], output_dir: Path):
-    """
-    Сохраняет информацию о заклинании в файл
-    """
     attrs = spell.get("attributes", {})
     name = attrs.get("name", "unknown")
     slug = attrs.get("slug", "unknown")
-    
-    # Создаем безопасное имя файла
     safe_name = slug.lower().replace(" ", "_").replace("/", "_").replace("\\", "_")
     filename = f"{safe_name}.txt"
     filepath = output_dir / filename
@@ -365,14 +327,9 @@ def save_spell(spell: Dict[str, Any], output_dir: Path):
 
 
 def save_potion(potion: Dict[str, Any], output_dir: Path):
-    """
-    Сохраняет информацию о зелье в файл
-    """
     attrs = potion.get("attributes", {})
     name = attrs.get("name", "unknown")
     slug = attrs.get("slug", "unknown")
-    
-    # Создаем безопасное имя файла
     safe_name = slug.lower().replace(" ", "_").replace("/", "_").replace("\\", "_")
     filename = f"{safe_name}.txt"
     filepath = output_dir / filename
@@ -386,14 +343,9 @@ def save_potion(potion: Dict[str, Any], output_dir: Path):
 
 
 def save_book(book: Dict[str, Any], output_dir: Path):
-    """
-    Сохраняет информацию о книге в файл
-    """
     attrs = book.get("attributes", {})
     title = attrs.get("title", "unknown")
     slug = attrs.get("slug", "unknown")
-    
-    # Создаем безопасное имя файла
     safe_name = slug.lower().replace(" ", "_").replace("/", "_").replace("\\", "_")
     filename = f"{safe_name}.txt"
     filepath = output_dir / filename
@@ -407,14 +359,9 @@ def save_book(book: Dict[str, Any], output_dir: Path):
 
 
 def main():
-    """
-    Основная функция для скачивания данных из PotterDB
-    """
-    # Создаем директории для сохранения
     base_dir = Path("knowledge_base_raw")
     base_dir.mkdir(exist_ok=True)
-    
-    # Директории для разных типов данных
+
     characters_dir = base_dir / "characters"
     spells_dir = base_dir / "spells"
     potions_dir = base_dir / "potions"
@@ -423,7 +370,6 @@ def main():
     for dir_path in [characters_dir, spells_dir, potions_dir, books_dir]:
         dir_path.mkdir(exist_ok=True)
     
-    # Статистика
     stats = {
         "characters": 0,
         "spells": 0,
@@ -435,7 +381,6 @@ def main():
     print("Загрузка данных из PotterDB API")
     print("=" * 60)
     
-    # 1. Загружаем популярных персонажей по slug
     print("\n1. Загрузка популярных персонажей...")
     for slug in POPULAR_CHARACTERS:
         character = fetch_character_by_slug(slug)
@@ -446,7 +391,6 @@ def main():
             print(f"Персонаж не найден: {slug}")
         time.sleep(0.3)  # Задержка между запросами
     
-    # 2. Загружаем популярные заклинания по slug
     print("\n2. Загрузка популярных заклинаний...")
     for slug in POPULAR_SPELLS:
         spell = fetch_spell_by_slug(slug)
@@ -457,7 +401,6 @@ def main():
             print(f"Заклинание не найдено: {slug}")
         time.sleep(0.3)  # Задержка между запросами
     
-    # 3. Загружаем популярные зелья по slug
     print("\n3. Загрузка популярных зелий...")
     for slug in POPULAR_POTIONS:
         potion = fetch_potion_by_slug(slug)
@@ -468,14 +411,12 @@ def main():
             print(f"Зелье не найдено: {slug}")
         time.sleep(0.3)  # Задержка между запросами
     
-    # 4. Загружаем все книги
     print("\n4. Загрузка книг...")
     books = fetch_all_books()
     for book in books:
         save_book(book, books_dir)
         stats["books"] += 1
     
-    # Сохраняем статистику
     stats_file = base_dir / "download_stats.json"
     with open(stats_file, "w", encoding="utf-8") as f:
         json.dump(stats, f, indent=2, ensure_ascii=False)

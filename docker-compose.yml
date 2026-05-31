@@ -1,0 +1,85 @@
+version: "3.9"
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    restart: unless-stopped
+
+  bot-api:
+    build: .
+    container_name: rag_bot_api
+    depends_on:
+      - ollama
+    environment:
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      OLLAMA_HOST: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:3b-instruct}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
+      SAFETY_ENABLED: ${SAFETY_ENABLED:-true}
+      QUERY_LOG_PATH: /app/logs/queries.jsonl
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./knowledge_base:/app/knowledge_base
+      - ./vector_index:/app/vector_index
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  # Telegram-бот. Запускается только если задан TELEGRAM_TOKEN.
+  # Используйте профиль: `docker compose --profile telegram up -d`
+  telegram-bot:
+    build: .
+    container_name: rag_telegram_bot
+    depends_on:
+      - ollama
+    environment:
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      OLLAMA_HOST: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:3b-instruct}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+      SAFETY_ENABLED: ${SAFETY_ENABLED:-true}
+      QUERY_LOG_PATH: /app/logs/queries.jsonl
+    command: ["python", "/app/src/telegram_bot.py"]
+    volumes:
+      - ./knowledge_base:/app/knowledge_base
+      - ./vector_index:/app/vector_index
+      - ./logs:/app/logs
+    restart: unless-stopped
+    profiles: ["telegram"]
+
+  # Cron-сервис для ежедневного обновления индекса (Задание 6)
+  updater:
+    build: .
+    container_name: rag_updater
+    environment:
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2}
+      KNOWLEDGE_BASE_PATH: /app/knowledge_base
+      FAISS_INDEX_PATH: /app/vector_index/faiss_index.bin
+      FAISS_CHUNKS_PATH: /app/vector_index/chunks.pkl
+      UPDATE_LOG_PATH: /app/logs/update.log
+    entrypoint: ["/bin/sh", "-c"]
+    # Бесконечный цикл: каждый день в 06:00 запускаем обновление.
+    command: >
+      "while true; do
+         now=$$(date +%H:%M);
+         if [ \"$$now\" = \"06:00\" ]; then
+           python /app/scripts/update_index.py >> /app/logs/update.log 2>&1;
+           sleep 61;
+         fi;
+         sleep 30;
+       done"
+    volumes:
+      - ./knowledge_base:/app/knowledge_base
+      - ./vector_index:/app/vector_index
+      - ./logs:/app/logs
+    restart: unless-stopped
+    profiles: ["updater"]
+
+volumes:
+  ollama_models:

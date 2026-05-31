@@ -1,0 +1,54 @@
+@startuml rag_query_sequence
+title Sequence: обработка пользовательского запроса (Задание 7)
+
+skinparam shadowing false
+skinparam sequenceArrowThickness 1
+
+actor User
+participant "REST API\n(FastAPI)" as API
+participant "RAGCore" as Core
+participant "Embedding model\n(SentenceTransformer)" as Emb
+database "FAISS index" as Faiss
+participant "Safety layer\n(safety.py)" as Safety
+participant "LLM provider\n(Ollama / OpenAI / mock)" as LLM
+participant "Query logger\n(JSONL)" as Log
+
+User -> API : POST /query {query, ...}
+API -> Core : query(text)
+Core -> Emb : encode(query)
+Emb --> Core : vector
+Core -> Faiss : search(vector, top_k)
+Faiss --> Core : raw_chunks
+
+alt пустой результат
+    Core -> Log : log {chunks_found=0}
+    Core --> API : "Я не знаю"
+    API --> User : 200 OK
+else чанки найдены
+    Core -> Safety : filter_chunks(raw_chunks)
+    Safety --> Core : sanitized_chunks
+    Core -> Core : build_prompt(few-shot + CoT)
+    Core -> LLM : generate(prompt, system=GUARD)
+    LLM --> Core : answer
+
+    alt LLM не отвечает / таймаут
+        Core -> Log : log {error}
+        Core --> API : "ошибка LLM"
+    else ответ получен
+        Core -> Safety : sanitize_answer(answer)
+        Safety --> Core : safe_answer
+        Core -> Log : log {answer, sources, safety_triggered, is_successful}
+        Core --> API : QueryResponse
+        API --> User : 200 OK
+    end
+end
+
+note over Safety
+  Возможные точки сбоя:
+  - prompt-injection в чанке
+  - утечка секретов в ответе LLM
+  - пустой индекс
+  - таймаут LLM
+end note
+
+@enduml

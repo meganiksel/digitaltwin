@@ -26,6 +26,7 @@ try:
         sanitize_answer,
     )
     from .query_logger import log_query
+    from .query_rewriter import rewrite_query
 except ImportError:
     from llm_providers import BaseLLMProvider, get_llm_provider  # type: ignore
     from safety import (  # type: ignore
@@ -35,6 +36,7 @@ except ImportError:
         sanitize_answer,
     )
     from query_logger import log_query  # type: ignore
+    from query_rewriter import rewrite_query  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -153,10 +155,20 @@ class RAGCore:
         if safety_enabled is None:
             safety_enabled = SAFETY_ENABLED_DEFAULT
 
-        raw_results = self.search(user_query, top_k=top_k)
+        # Query rewriting: переводим «оригинальные» термины Harry Potter
+        # (Гарри, Hogwarts, патронус, …) в актуальную лексику KB
+        # (Xander, Arcanum Academy, Summon Guardian, …) до поиска по индексу.
+        search_query, aliases_applied = rewrite_query(user_query)
+        if aliases_applied:
+            logger.info("Query rewritten: %r → %r (%s)",
+                        user_query, search_query, aliases_applied)
+
+        raw_results = self.search(search_query, top_k=top_k)
         results = filter_chunks(raw_results, enabled=safety_enabled)
 
         context = self.format_context(results)
+        # В промпт отдаём ОРИГИНАЛЬНЫЙ пользовательский вопрос — модели
+        # удобнее формулировать ответ на той же лексике, что и спросили.
         prompt = self._build_prompt(user_query, context, use_few_shot, use_cot)
         system = SYSTEM_PROMPT_GUARD if safety_enabled else None
 
@@ -183,6 +195,8 @@ class RAGCore:
             "sources": [r.get("source", "?") for r in results],
             "distances": [r.get("distance", 0.0) for r in results],
             "query": user_query,
+            "rewritten_query": search_query,
+            "aliases_applied": aliases_applied,
             "safety_triggered": triggered,
             "llm_provider": self.llm.name,
         }

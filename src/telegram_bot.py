@@ -110,7 +110,7 @@ async def _answer_query(message: Message, query: str) -> None:
         # чтобы не блокировать event-loop aiogram.
         result = await asyncio.to_thread(rag.query, query)
 
-        answer_text = f"📚 **Ответ:**\n\n{result['answer']}\n\n📖 **Источники:**\n"
+        answer_text = f"📚 Ответ:\n\n{result['answer']}\n\n📖 Источники:\n"
         for i, source in enumerate(result['sources'], 1):
             answer_text += f"{i}. {source}\n"
 
@@ -118,7 +118,9 @@ async def _answer_query(message: Message, query: str) -> None:
         if len(answer_text) > 4000:
             answer_text = answer_text[:3990] + "…"
 
-        await status_message.edit_text(answer_text, parse_mode="Markdown")
+        # Без parse_mode: LLM не гарантирует валидный Markdown/HTML,
+        # а Telegram падает на непарных *, _, [ и пр.
+        await status_message.edit_text(answer_text)
     except Exception as e:
         logger.exception("Ошибка при обработке запроса")
         await status_message.edit_text(
